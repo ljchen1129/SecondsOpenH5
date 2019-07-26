@@ -1,0 +1,28 @@
+PODS:
+  - HybridPageKit (1.2)
+  - HybridPageKit/HybridPageKitTests (1.2)
+  - LookinServer (0.9.3)
+  - SDWebImage (5.0.6):
+    - SDWebImage/Core (= 5.0.6)
+  - SDWebImage/Core (5.0.6)
+
+DEPENDENCIES:
+  - HybridPageKit
+  - HybridPageKit/HybridPageKitTests
+  - LookinServer
+  - SDWebImage
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - HybridPageKit
+    - LookinServer
+    - SDWebImage
+
+SPEC CHECKSUMS:
+  HybridPageKit: 7b54e9992b0c8f5671efd2ab6d9a864b3aecddbc
+  LookinServer: 44f1b5f32743dc61068a156ff86b5b47d0a82943
+  SDWebImage: 920f1a2ff1ca8296ad34f6e0510a1ef1d70ac965
+
+PODFILE CHECKSUM: 0f79ee157b0409714906e4e1148a9ecb7a3f719f
+
+COCOAPODS: 1.6.2
