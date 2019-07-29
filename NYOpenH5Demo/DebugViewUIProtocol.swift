@@ -8,7 +8,6 @@
 
 import CommonCrypto
 
-// 直接给String扩展方法
 extension String {
     func md5() -> String {
         let str = self.cString(using: String.Encoding.utf8)

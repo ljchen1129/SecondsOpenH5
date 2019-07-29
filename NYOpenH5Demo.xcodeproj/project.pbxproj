@@ -21,9 +21,21 @@
 		5DA8BC1B22EAA5FF00268865 /* DebugViewUIProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA8BC1A22EAA5FF00268865 /* DebugViewUIProtocol.swift */; };
 		5DA8BC1F22EAA63900268865 /* WebViewVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA8BC1E22EAA63900268865 /* WebViewVC.swift */; };
 		5DA8BC2122EAA66500268865 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5DA8BC2022EAA66500268865 /* Main.storyboard */; };
+		5DA8BC2822EE8B6A00268865 /* NYMemeryCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA8BC2722EE8B6900268865 /* NYMemeryCache.swift */; };
+		5DA8BC3322EEE6D200268865 /* MemoryCachUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA8BC3222EEE6D200268865 /* MemoryCachUITests.swift */; };
 		AE09C7C0E88DEE172DB4490D /* libPods-oc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FBEE612CF46B3B0D91AA4A02 /* libPods-oc.a */; };
 		B3712CDBA8DC6D32A00A8C44 /* libPods-NYOpenH5Demo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BFE5F83A26B39AB1331BC5B7 /* libPods-NYOpenH5Demo.a */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		5DA8BC3522EEE6D200268865 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5DA8BB7D22E8500000268865 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 5DA8BBEA22EA9F1600268865;
+			remoteInfo = oc;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		4F119FE95E7336214AC8674D /* Pods-NYOpenH5Demo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NYOpenH5Demo.release.xcconfig"; path = "Target Support Files/Pods-NYOpenH5Demo/Pods-NYOpenH5Demo.release.xcconfig"; sourceTree = "<group>"; };
@@ -51,6 +63,10 @@
 		5DA8BC1E22EAA63900268865 /* WebViewVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewVC.swift; sourceTree = "<group>"; };
 		5DA8BC2022EAA66500268865 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		5DA8BC2422EAA77E00268865 /* NYOpenH5Demo-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NYOpenH5Demo-Bridging-Header.h"; sourceTree = "<group>"; };
+		5DA8BC2722EE8B6900268865 /* NYMemeryCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NYMemeryCache.swift; sourceTree = "<group>"; };
+		5DA8BC3022EEE6D200268865 /* MemoryCachUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MemoryCachUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		5DA8BC3222EEE6D200268865 /* MemoryCachUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryCachUITests.swift; sourceTree = "<group>"; };
+		5DA8BC3422EEE6D200268865 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BFE5F83A26B39AB1331BC5B7 /* libPods-NYOpenH5Demo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-NYOpenH5Demo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DDA688A3E53AEF23E08EB2CE /* Pods-oc.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-oc.release.xcconfig"; path = "Target Support Files/Pods-oc/Pods-oc.release.xcconfig"; sourceTree = "<group>"; };
 		FBEE612CF46B3B0D91AA4A02 /* libPods-oc.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-oc.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -73,6 +89,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		5DA8BC2D22EEE6D200268865 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -81,6 +104,7 @@
 			children = (
 				5DA8BBEC22EA9F1600268865 /* oc */,
 				5DA8BC0922EAA5CE00268865 /* NYOpenH5Demo */,
+				5DA8BC3122EEE6D200268865 /* MemoryCachUITests */,
 				5DA8BB8622E8500000268865 /* Products */,
 				9FEDB7121C6B90152CD99BD9 /* Pods */,
 				FDB4061BA985762C907B8BD4 /* Frameworks */,
@@ -92,6 +116,7 @@
 			children = (
 				5DA8BBEB22EA9F1600268865 /* oc.app */,
 				5DA8BC0822EAA5CE00268865 /* NYOpenH5Demo.app */,
+				5DA8BC3022EEE6D200268865 /* MemoryCachUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -120,6 +145,7 @@
 				5DA8BC2422EAA77E00268865 /* NYOpenH5Demo-Bridging-Header.h */,
 				5DA8BC1A22EAA5FF00268865 /* DebugViewUIProtocol.swift */,
 				5DA8BC1E22EAA63900268865 /* WebViewVC.swift */,
+				5DA8BC2722EE8B6900268865 /* NYMemeryCache.swift */,
 				5DA8BC2022EAA66500268865 /* Main.storyboard */,
 				5DA8BC0A22EAA5CE00268865 /* AppDelegate.swift */,
 				5DA8BC0C22EAA5CE00268865 /* ViewController.swift */,
@@ -128,6 +154,15 @@
 				5DA8BC1622EAA5CF00268865 /* Info.plist */,
 			);
 			path = NYOpenH5Demo;
+			sourceTree = "<group>";
+		};
+		5DA8BC3122EEE6D200268865 /* MemoryCachUITests */ = {
+			isa = PBXGroup;
+			children = (
+				5DA8BC3222EEE6D200268865 /* MemoryCachUITests.swift */,
+				5DA8BC3422EEE6D200268865 /* Info.plist */,
+			);
+			path = MemoryCachUITests;
 			sourceTree = "<group>";
 		};
 		9FEDB7121C6B90152CD99BD9 /* Pods */ = {
@@ -191,6 +226,24 @@
 			productReference = 5DA8BC0822EAA5CE00268865 /* NYOpenH5Demo.app */;
 			productType = "com.apple.product-type.application";
 		};
+		5DA8BC2F22EEE6D200268865 /* MemoryCachUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5DA8BC3722EEE6D200268865 /* Build configuration list for PBXNativeTarget "MemoryCachUITests" */;
+			buildPhases = (
+				5DA8BC2C22EEE6D200268865 /* Sources */,
+				5DA8BC2D22EEE6D200268865 /* Frameworks */,
+				5DA8BC2E22EEE6D200268865 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				5DA8BC3622EEE6D200268865 /* PBXTargetDependency */,
+			);
+			name = MemoryCachUITests;
+			productName = MemoryCachUITests;
+			productReference = 5DA8BC3022EEE6D200268865 /* MemoryCachUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -203,9 +256,14 @@
 				TargetAttributes = {
 					5DA8BBEA22EA9F1600268865 = {
 						CreatedOnToolsVersion = 10.2.1;
+						LastSwiftMigration = 1020;
 					};
 					5DA8BC0722EAA5CE00268865 = {
 						CreatedOnToolsVersion = 10.2.1;
+					};
+					5DA8BC2F22EEE6D200268865 = {
+						CreatedOnToolsVersion = 10.2.1;
+						TestTargetID = 5DA8BBEA22EA9F1600268865;
 					};
 				};
 			};
@@ -224,6 +282,7 @@
 			targets = (
 				5DA8BBEA22EA9F1600268865 /* oc */,
 				5DA8BC0722EAA5CE00268865 /* NYOpenH5Demo */,
+				5DA8BC2F22EEE6D200268865 /* MemoryCachUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -246,6 +305,13 @@
 				5DA8BC1522EAA5CF00268865 /* LaunchScreen.storyboard in Resources */,
 				5DA8BC2122EAA66500268865 /* Main.storyboard in Resources */,
 				5DA8BC1222EAA5CF00268865 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		5DA8BC2E22EEE6D200268865 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -361,11 +427,28 @@
 				5DA8BC1F22EAA63900268865 /* WebViewVC.swift in Sources */,
 				5DA8BC0D22EAA5CE00268865 /* ViewController.swift in Sources */,
 				5DA8BC1B22EAA5FF00268865 /* DebugViewUIProtocol.swift in Sources */,
+				5DA8BC2822EE8B6A00268865 /* NYMemeryCache.swift in Sources */,
 				5DA8BC0B22EAA5CE00268865 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		5DA8BC2C22EEE6D200268865 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5DA8BC3322EEE6D200268865 /* MemoryCachUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		5DA8BC3622EEE6D200268865 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 5DA8BBEA22EA9F1600268865 /* oc */;
+			targetProxy = 5DA8BC3522EEE6D200268865 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		5DA8BBF322EA9F1600268865 /* Main.storyboard */ = {
@@ -516,6 +599,7 @@
 			baseConfigurationReference = 51322CF7E63067A6943F15BF /* Pods-oc.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 9LL2CTCDPL;
 				INFOPLIST_FILE = oc/Info.plist;
@@ -525,6 +609,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = yuu.oc;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -534,6 +620,7 @@
 			baseConfigurationReference = DDA688A3E53AEF23E08EB2CE /* Pods-oc.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 9LL2CTCDPL;
 				INFOPLIST_FILE = oc/Info.plist;
@@ -543,6 +630,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = yuu.oc;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -587,6 +675,44 @@
 			};
 			name = Release;
 		};
+		5DA8BC3822EEE6D200268865 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 9LL2CTCDPL;
+				INFOPLIST_FILE = MemoryCachUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = yuu.MemoryCachUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = oc;
+			};
+			name = Debug;
+		};
+		5DA8BC3922EEE6D200268865 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 9LL2CTCDPL;
+				INFOPLIST_FILE = MemoryCachUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = yuu.MemoryCachUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = oc;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -613,6 +739,15 @@
 			buildConfigurations = (
 				5DA8BC1822EAA5CF00268865 /* Debug */,
 				5DA8BC1922EAA5CF00268865 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5DA8BC3722EEE6D200268865 /* Build configuration list for PBXNativeTarget "MemoryCachUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5DA8BC3822EEE6D200268865 /* Debug */,
+				5DA8BC3922EEE6D200268865 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
