@@ -48,5 +48,10 @@ extension ViewController: UITableViewDelegate {
         let urlString = datasoures[index]
         let vc = WebViewVC(urlString: urlString)
         navigationController?.pushViewController(vc, animated: true)
+        
+//        let vc = AppHostViewController.init()
+//        vc.url = "https://www.imeos.one/"
+//        vc.pageTitle = "xxxx"
+//        navigationController?.pushViewController(vc, animated: true)
     }
 }

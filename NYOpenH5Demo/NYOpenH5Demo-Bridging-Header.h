@@ -9,3 +9,4 @@
 
 #import "HPKPageManager.h"
 #import "SDWebImageManager.h"
+#import <AppHost/AppHost.h>

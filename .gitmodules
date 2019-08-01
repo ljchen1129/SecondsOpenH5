@@ -1,0 +1,3 @@
+[submodule "AppHost"]
+	path = AppHost
+	url = https://github.com/hite/AppHost.git

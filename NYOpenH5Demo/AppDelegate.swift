@@ -17,11 +17,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
-        let configuration = WKWebViewConfiguration.init()
-        configuration.setURLSchemeHandler(CustomRLSchemeHandler(), forURLScheme: "customscheme")
-        let wkwebView = WKWebView(frame: CGRect.zero, configuration: configuration)
-//        HPKPageManager.sharedInstance().enqueue(wkwebView)
-        wkwebView.removeFromSuperview()
+//        let configuration = WKWebViewConfiguration.init()
+//        configuration.setURLSchemeHandler(CustomRLSchemeHandler(), forURLScheme: "customscheme")
+//        let wkwebView = WKWebView(frame: CGRect.zero, configuration: configuration)
+////        HPKPageManager.sharedInstance().enqueue(wkwebView)
+//        wkwebView.removeFromSuperview()
         
         return true
     }

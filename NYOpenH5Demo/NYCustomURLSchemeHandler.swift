@@ -1,26 +1,31 @@
 //
-//  WebViewVC.swift
+//  NYCustomURLSchemeHandler.swift
 //  NYOpenH5Demo
 //
-//  Created by 陈良静 on 2019/7/24.
+//  Created by 陈良静 on 2019/7/30.
 //  Copyright © 2019 陈良静. All rights reserved.
 //
 
-import UIKit
-import WebKit
+import Foundation
 import CoreServices
+import CommonCrypto
 
-
-class CustomRLSchemeHandler: NSObject, WKURLSchemeHandler {
+class NYCustomURLSchemeHandler: NSObject, WKURLSchemeHandler {
+    var dask: URLSessionDataTask?
+    /// 防止 urlSchemeTask 实例释放了，又给他发消息导致崩溃
+    var holdUrlSchemeTasks = [AnyHashable: Bool]()
+    var queue = DispatchQueue(label: "holdUrlSchemeTasksQueue")
+    
     func webView(_ webView: WKWebView, start urlSchemeTask: WKURLSchemeTask) {
         let headers = urlSchemeTask.request.allHTTPHeaderFields
         guard let accept = headers?["Accept"] else { return }
-        let requestUrlString = urlSchemeTask.request.url?.absoluteString
+        guard let requestUrlString = urlSchemeTask.request.url?.absoluteString else { return }
+        
         if accept.count >= "text".count && accept.contains("text/html") {
             // html 拦截
             print("html = \(String(describing: requestUrlString))")
             loadLocalFile(fileName: creatCacheKey(urlSchemeTask: urlSchemeTask), urlSchemeTask: urlSchemeTask)
-        } else if (requestUrlString?.isJSOrCSSFile())! {
+        } else if (requestUrlString.isJSOrCSSFile()) {
             // js || css 文件
             print("js || css = \(String(describing: requestUrlString))")
             loadLocalFile(fileName: creatCacheKey(urlSchemeTask: urlSchemeTask), urlSchemeTask: urlSchemeTask)
@@ -56,8 +61,13 @@ class CustomRLSchemeHandler: NSObject, WKURLSchemeHandler {
     
     
     func webView(_ webView: WKWebView, stop urlSchemeTask: WKURLSchemeTask) {
+        dask = nil
         
+        queue.sync {
+            holdUrlSchemeTasks[urlSchemeTask.description] = false
+        }
     }
+    
     
     func creatCacheKey(urlSchemeTask: WKURLSchemeTask) -> String? {
         guard let fileName = urlSchemeTask.request.url?.absoluteString.replacingOccurrences(of: "customscheme://", with: "") else { return nil }
@@ -89,13 +99,20 @@ class CustomRLSchemeHandler: NSObject, WKURLSchemeHandler {
             }
             
         } else {
-             print("没有缓存!!!!")
+            print("没有缓存!!!!")
             // 没有缓存,替换url，重新加载
             guard let urlString = urlSchemeTask.request.url?.absoluteString.replacingOccurrences(of: "customscheme", with: "https") else { return }
             // 替换成https请求
             let request = URLRequest(url: URL(string: urlString)!)
             let session = URLSession.init(configuration: .default)
-            let dask = session.dataTask(with: request) { (data, response, error) in
+            dask = session.dataTask(with: request) { (data, response, error) in
+                // urlSchemeTask 是否提前结束，结束了调用实例方法会崩溃
+                if let isValid = self.holdUrlSchemeTasks[urlSchemeTask.description] {
+                    if !isValid {
+                        return
+                    }
+                }
+                
                 if let error = error {
                     urlSchemeTask.didFailWithError(error)
                 } else {
@@ -104,7 +121,7 @@ class CustomRLSchemeHandler: NSObject, WKURLSchemeHandler {
                     urlSchemeTask.didFinish()
                     
                     guard let accept = urlSchemeTask.request.allHTTPHeaderFields?["Accept"] else { return }
-                
+                    
                     if !(accept.count > "image".count && accept.contains("image")) {
                         // 图片不下载
                         print("开始重新发送网络请求!")
@@ -117,7 +134,7 @@ class CustomRLSchemeHandler: NSObject, WKURLSchemeHandler {
                 }
             }
             
-            dask.resume()
+            dask?.resume()
             session.finishTasksAndInvalidate()
         }
     }
@@ -138,8 +155,21 @@ class CustomRLSchemeHandler: NSObject, WKURLSchemeHandler {
     }
     
     
+    /// 重新发送请求
+    ///
+    /// - Parameters:
+    ///   - urlSchemeTask: <#urlSchemeTask description#>
+    ///   - mineType: <#mineType description#>
+    ///   - requestData: <#requestData description#>
     func resendRequset(urlSchemeTask: WKURLSchemeTask, mineType: String?, requestData: Data) {
         guard let url = urlSchemeTask.request.url else { return }
+        
+        if let isValid = holdUrlSchemeTasks[urlSchemeTask.description] {
+            if !isValid {
+                return
+            }
+        }
+        
         let mineT = mineType ?? "text/html"
         let response = URLResponse(url: url, mimeType: mineT, expectedContentLength: requestData.count, textEncodingName: nil)
         urlSchemeTask.didReceive(response)
@@ -148,150 +178,29 @@ class CustomRLSchemeHandler: NSObject, WKURLSchemeHandler {
     }
 }
 
-class WebViewVC: UIViewController {
-    
-    var urlString: String
-    var timer: DispatchSourceTimer?
-    
-    var lastTime: Double?
-    
-    lazy var webview: NYReuseWebView = {
-//        let configration = WKWebViewConfiguration.init()
-//        configration.setURLSchemeHandler(CustomRLSchemeHandler(), forURLScheme: "customscheme")
-//        let wkwebView = WKWebView(frame: CGRect.zero, configuration: configration)
-        let wkwebView = NYWebViewReusePool.instance.getReusedWebView(ForHolder: self)!
-        wkwebView.navigationDelegate = self
-        wkwebView.uiDelegate = self
-        
-//        let wkwebView = HPKPageManager.sharedInstance().dequeueWebView(with: HPKWebView.self, webViewHolder: self)
-//        wkwebView?.navigationDelegate = self
-        wkwebView.addObserver(self, forKeyPath: #keyPath(HPKWebView.estimatedProgress), options: .new, context: nil)
-//        let newWkwebView = HPKPageManager.sharedInstance().dequeueWebView(with: HPKWebView.self, webViewHolder: self)
-//        newWkwebView?.navigationDelegate = self
-//        newWkwebView?.addObserver(self, forKeyPath: #keyPath(HPKWebView.estimatedProgress), options: .new, context: nil)
-        
-        return wkwebView
-    }()
-    
-    lazy var progressLine: UIProgressView = {
-        let line = UIProgressView(frame: CGRect.zero)
-        line.backgroundColor = UIColor.white
-        line.progressTintColor = UIColor.red
-        line.isHidden = true
-        return line
-    }()
-    
-    lazy var loadTimeLabel: UILabel = {
-        let label = UILabel(frame: CGRect.zero)
-        label.textColor = UIColor.red
-        label.backgroundColor = UIColor.gray
-        label.font = UIFont.systemFont(ofSize: 18)
-        return label
-    }()
-    
-    init(urlString: String) {
-        self.urlString = urlString
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        webview.frame = view.bounds
-        view.addSubview(webview)
-        progressLine.frame = CGRect(x: 0, y: 88, width: view.bounds.width, height: 1)
-        view.addSubview(progressLine)
-        view.bringSubviewToFront(progressLine)
-        
-        view.addSubview(loadTimeLabel)
-        loadTimeLabel.frame = CGRect(x: 100, y: 100, width: 100, height: 50)
-        view.bringSubviewToFront(loadTimeLabel)
-        
-        guard let url = URL(string: urlString) else { return }
-        let request = URLRequest(url: url)
-        webview.load(request)
-        
-        
-        // 开启定时器
-        timer = DispatchSource.makeTimerSource(flags: [], queue: DispatchQueue.main)
-        timer!.schedule(deadline: .now(), repeating: DispatchTimeInterval.microseconds(1))
-        lastTime = CFAbsoluteTimeGetCurrent()
-        self.loadTimeLabel.text = String(format: "%.3f", lastTime!)
-        timer!.setEventHandler {
-            let time = CFAbsoluteTimeGetCurrent() - self.lastTime!
-            self.loadTimeLabel.text = String(format: "%.3f", time)
+extension String {
+    func md5() -> String {
+        let str = self.cString(using: String.Encoding.utf8)
+        let strLen = CUnsignedInt(self.lengthOfBytes(using: String.Encoding.utf8))
+        let digestLen = Int(CC_MD5_DIGEST_LENGTH)
+        let result = UnsafeMutablePointer<UInt8>.allocate(capacity: 16)
+        CC_MD5(str!, strLen, result)
+        let hash = NSMutableString()
+        for i in 0 ..< digestLen {
+            hash.appendFormat("%02x", result[i])
         }
-        timer?.activate()
-        
-        UIApplication.shared.applicationSupportsShakeToEdit = true
-        self.becomeFirstResponder()
+        free(result)
+        return String(format: hash as String)
     }
     
-    deinit {
-       webview.removeObserver(self, forKeyPath: #keyPath(WKWebView.estimatedProgress))
-    }
-    
-    // 观察者
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        let value = change?[NSKeyValueChangeKey.newKey] as! NSNumber
-        progressLine.progress = value.floatValue
-    }
-}
-
-
-extension WebViewVC: WKNavigationDelegate {
-    
-    func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
-        progressLine.isHidden = false
-    }
-    
-    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        webView.evaluateJavaScript("document.title", completionHandler: { [weak self] (x, error) in
-            print(x as Any)
-            print(error as Any)
-            self?.title = (x as! String)
-        })
-        
-        progressLine.isHidden = true
-        timer?.cancel()
-        timer = nil
-    }
-    
-    func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-        print(error)
-    }
-}
-
-extension WebViewVC: WKUIDelegate {
-    
-    
-    
-}
-
-extension WebViewVC {
-    override func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
-        if event?.subtype == UIEvent.EventSubtype.motionShake {
-            
-            let alertVC = UIAlertController.init(title: "查看界面结构", message: "", preferredStyle: UIAlertController.Style.alert)
-            alertVC.addAction(UIAlertAction(title: "导出UI结构", style: .default, handler: { (_) in
-                NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "Lookin_Export"), object: nil)
-            }))
-            alertVC.addAction(UIAlertAction(title: "2D视图", style: .default, handler: { (_) in
-                NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "Lookin_2D"), object: nil)
-            }))
-            alertVC.addAction(UIAlertAction(title: "3D视图", style: .default, handler: { (_) in
-                NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "Lookin_3D"), object: nil)
-            }))
-            alertVC.addAction(UIAlertAction(title: "取消", style: .cancel, handler: { (_) in
-                
-            }))
-            
-            self.present(alertVC, animated: true, completion: nil)
+    func isJSOrCSSFile() -> Bool {
+        if self.count == 0 { return false }
+        let pattern = "\\.(js|css)"
+        do {
+            let result = try NSRegularExpression(pattern: pattern, options: NSRegularExpression.Options.caseInsensitive).matches(in: self, options: NSRegularExpression.MatchingOptions.init(rawValue: 0), range: NSRange(location: 0, length: self.count))
+            return result.count > 0
+        } catch {
+            return false
         }
     }
 }
-
