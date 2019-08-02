@@ -13,14 +13,18 @@ protocol NYReuseWebViewProtocol {
     func endReuse()
 }
 
-let kURLScheme = "customscheme"
-
-public class NYWebViewReusePool: NSObject {
-    public static let instance = NYWebViewReusePool()
+@objc public class NYWebViewReusePool: NSObject {
+    @objc public static let shared = NYWebViewReusePool()
     
-    var configeration: WKWebViewConfiguration {
+    var defaultConfigeration: WKWebViewConfiguration {
         let config = WKWebViewConfiguration.init()
-        config.setURLSchemeHandler(NYCustomURLSchemeHandler(), forURLScheme: kURLScheme)
+        let preferences = WKPreferences.init()
+        preferences.javaScriptCanOpenWindowsAutomatically = true
+        config.preferences = preferences
+        if #available(iOS 11.0, *) {
+            config.setURLSchemeHandler(NYCustomURLSchemeHandler(), forURLScheme: "customScheme")
+        }
+        
         return config
     }
     
@@ -46,7 +50,7 @@ public class NYWebViewReusePool: NSObject {
     
     @objc static func didFinishLaunchingNotification() {
         // 预先初始化webview
-        NYWebViewReusePool.instance.prepareWebView()
+        NYWebViewReusePool.shared.prepareWebView()
     }
     
     @objc func didReceiveMemoryWarningNotification() {
@@ -54,7 +58,7 @@ public class NYWebViewReusePool: NSObject {
     }
     
     func prepareWebView() {
-        let webView = NYReuseWebView(frame: CGRect.zero, configuration: configeration)
+        let webView = NYReuseWebView(frame: CGRect.zero, configuration: defaultConfigeration)
         reusableWebViewSet.insert(webView)
     }
     
@@ -80,7 +84,7 @@ public class NYWebViewReusePool: NSObject {
 
 // MARK: - 复用池操作
 extension NYWebViewReusePool {
-    public func getReusedWebView(ForHolder holder: AnyObject?) -> NYReuseWebView? {
+    @objc public func getReusedWebView(ForHolder holder: AnyObject?) -> NYReuseWebView? {
         guard let holder = holder else { return nil }
         
         tryCompactWeakHolders()
@@ -92,7 +96,7 @@ extension NYWebViewReusePool {
             visiableWebViewSet.insert(webView)
             webView.willReuse()
         } else {
-            webView = NYReuseWebView(frame: CGRect.zero, configuration: configeration)
+            webView = NYReuseWebView(frame: CGRect.zero, configuration: defaultConfigeration)
             visiableWebViewSet.insert(webView)
         }
         
@@ -102,7 +106,7 @@ extension NYWebViewReusePool {
         return webView
     }
     
-    func recycleReusedWebView(_ webView: NYReuseWebView?) {
+    @objc func recycleReusedWebView(_ webView: NYReuseWebView?) {
         guard let webView = webView else { return }
         
         lock.wait()
@@ -115,7 +119,7 @@ extension NYWebViewReusePool {
         lock.signal()
     }
     
-    func clearReusableWebViews() {
+    @objc func clearReusableWebViews() {
         lock.wait()
         reusableWebViewSet.removeAll()
         lock.signal()

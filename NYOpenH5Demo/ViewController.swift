@@ -12,7 +12,7 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
     
-    let datasoures = ["customscheme://www.imeos.one/", "customscheme://www.omniexplorer.info/", "customscheme://etherscan.io/", "customscheme://eostracker.io/", "customscheme://m.btc.com", "customscheme://neotracker.io/"]
+    let datasoures = ["https://www.imeos.one/", "customscheme://www.omniexplorer.info/", "customscheme://etherscan.io/", "customscheme://eostracker.io/", "customscheme://m.btc.com", "customscheme://neotracker.io/"]
     
     override func viewDidLoad() {
         super.viewDidLoad()

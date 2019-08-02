@@ -31,6 +31,7 @@ extension NYReuseWebView: NYReuseWebViewProtocol {
         holdObject = nil
         scrollView.delegate = nil
         stopLoading()
+        navigationDelegate = nil
         uiDelegate = nil
     }
 }

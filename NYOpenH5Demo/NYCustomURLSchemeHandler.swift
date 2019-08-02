@@ -7,8 +7,6 @@
 //
 
 import Foundation
-import CoreServices
-import CommonCrypto
 
 class NYCustomURLSchemeHandler: NSObject, WKURLSchemeHandler {
     var dask: URLSessionDataTask?
@@ -39,7 +37,7 @@ class NYCustomURLSchemeHandler: NSObject, WKURLSchemeHandler {
             SDWebImageManager.shared.imageCache.queryImage(forKey: key, options: SDWebImageOptions.retryFailed, context: nil) { (image, data, cacheType) in
                 if let image = image {
                     guard let imageData = image.jpegData(compressionQuality: 1) else { return }
-                    let mimeType = self.mimeType(pathExtension: self.creatCacheKey(urlSchemeTask: urlSchemeTask)!)
+                    let mimeType = String.mimeType(pathExtension: self.creatCacheKey(urlSchemeTask: urlSchemeTask)!)
                     self.resendRequset(urlSchemeTask: urlSchemeTask, mineType: mimeType, requestData: imageData)
                 } else {
                     self.loadLocalFile(fileName: self.creatCacheKey(urlSchemeTask: urlSchemeTask), urlSchemeTask: urlSchemeTask)
@@ -61,7 +59,7 @@ class NYCustomURLSchemeHandler: NSObject, WKURLSchemeHandler {
     
     
     func webView(_ webView: WKWebView, stop urlSchemeTask: WKURLSchemeTask) {
-        dask = nil
+        dask?.cancel()
         
         queue.sync {
             holdUrlSchemeTasks[urlSchemeTask.description] = false
@@ -93,7 +91,7 @@ class NYCustomURLSchemeHandler: NSObject, WKURLSchemeHandler {
             print("缓存命中!!!!")
             do {
                 let data = try Data(contentsOf: pathUrl, options: Data.ReadingOptions.dataReadingMapped)
-                resendRequset(urlSchemeTask: urlSchemeTask, mineType: mimeType(pathExtension: pathUrl.pathExtension), requestData: data)
+                resendRequset(urlSchemeTask: urlSchemeTask, mineType: String.mimeType(pathExtension: pathUrl.pathExtension), requestData: data)
             } catch let error {
                 print("缓存读取 error = \(error)")
             }
@@ -139,22 +137,6 @@ class NYCustomURLSchemeHandler: NSObject, WKURLSchemeHandler {
         }
     }
     
-    //根据后缀获取对应的Mime-Type
-    func mimeType(pathExtension: String) -> String {
-        if let uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension,
-                                                           pathExtension as NSString,
-                                                           nil)?.takeRetainedValue() {
-            if let mimetype = UTTypeCopyPreferredTagWithClass(uti, kUTTagClassMIMEType)?
-                .takeRetainedValue() {
-                return mimetype as String
-            }
-        }
-        
-        //文件资源类型如果不知道，传万能类型application/octet-stream，服务器会自动解析文件类
-        return "application/octet-stream"
-    }
-    
-    
     /// 重新发送请求
     ///
     /// - Parameters:
@@ -163,7 +145,6 @@ class NYCustomURLSchemeHandler: NSObject, WKURLSchemeHandler {
     ///   - requestData: <#requestData description#>
     func resendRequset(urlSchemeTask: WKURLSchemeTask, mineType: String?, requestData: Data) {
         guard let url = urlSchemeTask.request.url else { return }
-        
         if let isValid = holdUrlSchemeTasks[urlSchemeTask.description] {
             if !isValid {
                 return
@@ -175,32 +156,5 @@ class NYCustomURLSchemeHandler: NSObject, WKURLSchemeHandler {
         urlSchemeTask.didReceive(response)
         urlSchemeTask.didReceive(requestData)
         urlSchemeTask.didFinish()
-    }
-}
-
-extension String {
-    func md5() -> String {
-        let str = self.cString(using: String.Encoding.utf8)
-        let strLen = CUnsignedInt(self.lengthOfBytes(using: String.Encoding.utf8))
-        let digestLen = Int(CC_MD5_DIGEST_LENGTH)
-        let result = UnsafeMutablePointer<UInt8>.allocate(capacity: 16)
-        CC_MD5(str!, strLen, result)
-        let hash = NSMutableString()
-        for i in 0 ..< digestLen {
-            hash.appendFormat("%02x", result[i])
-        }
-        free(result)
-        return String(format: hash as String)
-    }
-    
-    func isJSOrCSSFile() -> Bool {
-        if self.count == 0 { return false }
-        let pattern = "\\.(js|css)"
-        do {
-            let result = try NSRegularExpression(pattern: pattern, options: NSRegularExpression.Options.caseInsensitive).matches(in: self, options: NSRegularExpression.MatchingOptions.init(rawValue: 0), range: NSRange(location: 0, length: self.count))
-            return result.count > 0
-        } catch {
-            return false
-        }
     }
 }

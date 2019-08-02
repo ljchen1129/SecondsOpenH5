@@ -7,11 +7,10 @@
 //
 
 import Foundation
-import CommonCrypto
 
 /// h5 页面资源缓存
 class NYH5FileCache: NSObject {
-
+    
     
 }
 
