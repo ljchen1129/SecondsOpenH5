@@ -6,7 +6,5 @@
 //  Copyright © 2019 陈良静. All rights reserved.
 //
 
-
-#import "HPKPageManager.h"
 #import "SDWebImageManager.h"
-#import <AppHost/AppHost.h>
+#import "AFNetworking.h"

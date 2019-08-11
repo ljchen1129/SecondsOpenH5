@@ -7,31 +7,19 @@
 //
 
 import UIKit
+import WebKit
 
 class WebViewVC: UIViewController {
     
     var urlString: String
     var timer: DispatchSourceTimer?
-    
     var lastTime: Double?
     
     lazy var webview: WKWebView = {
-//        let configration = WKWebViewConfiguration.init()
-//        let preferences = WKPreferences.init()
-//        preferences.javaScriptCanOpenWindowsAutomatically = true
-//        configration.preferences = preferences
-//        configration.setURLSchemeHandler(CustomRLSchemeHandler(), forURLScheme: "customscheme")
-//        let wkwebView = WKWebView(frame: CGRect.zero, configuration: configration)
-//        let wkwebView = NYWebViewReusePool.shared.getReusedWebView(ForHolder: self)!
-//        wkwebView.navigationDelegate = self
-        
-        let wkwebView = HPKPageManager.sharedInstance().dequeueWebView(with: HPKWebView.self, webViewHolder: self)!
-//        wkwebView?.navigationDelegate = self
-        wkwebView.addObserver(self, forKeyPath: #keyPath(HPKWebView.estimatedProgress), options: .new, context: nil)
-//        let newWkwebView = HPKPageManager.sharedInstance().dequeueWebView(with: HPKWebView.self, webViewHolder: self)
-//        newWkwebView?.navigationDelegate = self
-//        newWkwebView?.addObserver(self, forKeyPath: #keyPath(HPKWebView.estimatedProgress), options: .new, context: nil)
-        
+        let wkwebView = NYWebViewReusePool.shared.getReusedWebView(ForHolder: self)!
+        wkwebView.navigationDelegate = self
+        wkwebView.addObserver(self, forKeyPath: #keyPath(WKWebView.estimatedProgress), options: .new, context: nil)
+
         return wkwebView
     }()
     
@@ -53,6 +41,11 @@ class WebViewVC: UIViewController {
     
     init(urlString: String) {
         self.urlString = urlString
+        
+        if self.urlString.hasPrefix("https") {
+            self.urlString = self.urlString.replacingOccurrences(of: "https", with: "customscheme")
+        }
+        
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -99,6 +92,14 @@ class WebViewVC: UIViewController {
         print("webVC 销毁了!!!")
     }
     
+    // 白屏
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if webview.title == nil {
+            webview.reload()
+        }
+    }
+    
     // 观察者
     override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         let value = change?[NSKeyValueChangeKey.newKey] as! NSNumber
@@ -106,7 +107,7 @@ class WebViewVC: UIViewController {
     }
 }
 
-
+// MARK: - WKNavigationDelegate
 extension WebViewVC: WKNavigationDelegate {
     
     func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
@@ -128,28 +129,41 @@ extension WebViewVC: WKNavigationDelegate {
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
         print(error)
     }
-}
-
-extension WebViewVC {
-    override func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
-        if event?.subtype == UIEvent.EventSubtype.motionShake {
-            
-            let alertVC = UIAlertController.init(title: "查看界面结构", message: "", preferredStyle: UIAlertController.Style.alert)
-            alertVC.addAction(UIAlertAction(title: "导出UI结构", style: .default, handler: { (_) in
-                NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "Lookin_Export"), object: nil)
-            }))
-            alertVC.addAction(UIAlertAction(title: "2D视图", style: .default, handler: { (_) in
-                NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "Lookin_2D"), object: nil)
-            }))
-            alertVC.addAction(UIAlertAction(title: "3D视图", style: .default, handler: { (_) in
-                NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "Lookin_3D"), object: nil)
-            }))
-            alertVC.addAction(UIAlertAction(title: "取消", style: .cancel, handler: { (_) in
-                
-            }))
-            
-            self.present(alertVC, animated: true, completion: nil)
-        }
+    
+    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+        decisionHandler(WKNavigationActionPolicy.allow)
+    }
+    
+    func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
+        decisionHandler(WKNavigationResponsePolicy.allow)
+    }
+    
+    // 白屏
+    func webViewWebContentProcessDidTerminate(_ webView: WKWebView) {
+        webView.reload()
     }
 }
+
+//extension WebViewVC {
+//    override func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
+//        if event?.subtype == UIEvent.EventSubtype.motionShake {
+//
+//            let alertVC = UIAlertController.init(title: "查看界面结构", message: "", preferredStyle: UIAlertController.Style.alert)
+//            alertVC.addAction(UIAlertAction(title: "导出UI结构", style: .default, handler: { (_) in
+//                NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "Lookin_Export"), object: nil)
+//            }))
+//            alertVC.addAction(UIAlertAction(title: "2D视图", style: .default, handler: { (_) in
+//                NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "Lookin_2D"), object: nil)
+//            }))
+//            alertVC.addAction(UIAlertAction(title: "3D视图", style: .default, handler: { (_) in
+//                NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "Lookin_3D"), object: nil)
+//            }))
+//            alertVC.addAction(UIAlertAction(title: "取消", style: .cancel, handler: { (_) in
+//
+//            }))
+//
+//            self.present(alertVC, animated: true, completion: nil)
+//        }
+//    }
+//}
 

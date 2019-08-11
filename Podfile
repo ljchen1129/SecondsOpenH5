@@ -6,19 +6,9 @@ target 'NYOpenH5Demo' do
   # use_frameworks!
 
   # Pods for NYOpenH5Demo
-  pod "HybridPageKit", :testspecs => ["HybridPageKitTests"]
-  pod 'LookinServer', :configurations => ['Debug']
+#  pod "HybridPageKit", :testspecs => ["HybridPageKitTests"]
+#  pod 'LookinServer', :configurations => ['Debug']
   pod 'SDWebImage'
+  pod 'AFNetworking'
 end
 
-target 'oc' do
-  # Uncomment the next line if you're using Swift or would like to use dynamic frameworks
-  # use_frameworks!
-
-  # Pods for oc
-
-  pod "HybridPageKit", :testspecs => ["HybridPageKitTests"]
-  pod 'LookinServer', :configurations => ['Debug']
-  pod 'SDWebImage'
-  
-end

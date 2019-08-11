@@ -12,7 +12,7 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
     
-    let datasoures = ["https://www.imeos.one/", "customscheme://www.omniexplorer.info/", "customscheme://etherscan.io/", "customscheme://eostracker.io/", "customscheme://m.btc.com", "customscheme://neotracker.io/"]
+    let datasoures = ["https://www.imeos.one/", "https://www.omniexplorer.info/", "https://etherscan.io/", "https://eostracker.io/", "https://m.btc.com", "https://neotracker.io/", "https://baidu.com", "https://sina.com", "https://sohu.com", "https://zhihu.com", "https://chenliangjing.me"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,3 +55,4 @@ extension ViewController: UITableViewDelegate {
 //        navigationController?.pushViewController(vc, animated: true)
     }
 }
+

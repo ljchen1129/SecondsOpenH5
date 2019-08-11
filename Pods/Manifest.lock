@@ -1,28 +1,36 @@
 PODS:
-  - HybridPageKit (1.2)
-  - HybridPageKit/HybridPageKitTests (1.2)
-  - LookinServer (0.9.3)
+  - AFNetworking (3.2.1):
+    - AFNetworking/NSURLSession (= 3.2.1)
+    - AFNetworking/Reachability (= 3.2.1)
+    - AFNetworking/Security (= 3.2.1)
+    - AFNetworking/Serialization (= 3.2.1)
+    - AFNetworking/UIKit (= 3.2.1)
+  - AFNetworking/NSURLSession (3.2.1):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/Reachability (3.2.1)
+  - AFNetworking/Security (3.2.1)
+  - AFNetworking/Serialization (3.2.1)
+  - AFNetworking/UIKit (3.2.1):
+    - AFNetworking/NSURLSession
   - SDWebImage (5.0.6):
     - SDWebImage/Core (= 5.0.6)
   - SDWebImage/Core (5.0.6)
 
 DEPENDENCIES:
-  - HybridPageKit
-  - HybridPageKit/HybridPageKitTests
-  - LookinServer
+  - AFNetworking
   - SDWebImage
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
-    - HybridPageKit
-    - LookinServer
+    - AFNetworking
     - SDWebImage
 
 SPEC CHECKSUMS:
-  HybridPageKit: 7b54e9992b0c8f5671efd2ab6d9a864b3aecddbc
-  LookinServer: 44f1b5f32743dc61068a156ff86b5b47d0a82943
+  AFNetworking: b6f891fdfaed196b46c7a83cf209e09697b94057
   SDWebImage: 920f1a2ff1ca8296ad34f6e0510a1ef1d70ac965
 
-PODFILE CHECKSUM: 0f79ee157b0409714906e4e1148a9ecb7a3f719f
+PODFILE CHECKSUM: 763f02c7e7e4fdc96a7e333a1d4254804fd9167f
 
-COCOAPODS: 1.6.2
+COCOAPODS: 1.7.3

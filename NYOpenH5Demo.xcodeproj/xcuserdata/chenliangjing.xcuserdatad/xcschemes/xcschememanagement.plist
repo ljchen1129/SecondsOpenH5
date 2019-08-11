@@ -7,17 +7,22 @@
 		<key>NYOpenH5Demo.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>6</integer>
-		</dict>
-		<key>oc.xcscheme_^#shared#^_</key>
-		<dict>
-			<key>orderHint</key>
 			<integer>7</integer>
 		</dict>
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
 		<key>5DA8BB8422E8500000268865</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>5DA8BC0722EAA5CE00268865</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>5DA8BC2F22EEE6D200268865</key>
 		<dict>
 			<key>primary</key>
 			<true/>
