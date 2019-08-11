@@ -22,7 +22,6 @@
 		5DA8BC1522EAA5CF00268865 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5DA8BC1322EAA5CF00268865 /* LaunchScreen.storyboard */; };
 		5DA8BC1F22EAA63900268865 /* WebViewVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA8BC1E22EAA63900268865 /* WebViewVC.swift */; };
 		5DA8BC2122EAA66500268865 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5DA8BC2022EAA66500268865 /* Main.storyboard */; };
-		5DA8BC3322EEE6D200268865 /* MemoryCachUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA8BC3222EEE6D200268865 /* MemoryCachUITests.swift */; };
 		B3712CDBA8DC6D32A00A8C44 /* libPods-NYOpenH5Demo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BFE5F83A26B39AB1331BC5B7 /* libPods-NYOpenH5Demo.a */; };
 /* End PBXBuildFile section */
 
@@ -62,9 +61,6 @@
 		5DA8BC1E22EAA63900268865 /* WebViewVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebViewVC.swift; sourceTree = "<group>"; };
 		5DA8BC2022EAA66500268865 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		5DA8BC2422EAA77E00268865 /* NYOpenH5Demo-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NYOpenH5Demo-Bridging-Header.h"; sourceTree = "<group>"; };
-		5DA8BC3022EEE6D200268865 /* MemoryCachUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MemoryCachUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		5DA8BC3222EEE6D200268865 /* MemoryCachUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MemoryCachUITests.swift; sourceTree = "<group>"; };
-		5DA8BC3422EEE6D200268865 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BFE5F83A26B39AB1331BC5B7 /* libPods-NYOpenH5Demo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-NYOpenH5Demo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DDA688A3E53AEF23E08EB2CE /* Pods-oc.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-oc.release.xcconfig"; path = "Target Support Files/Pods-oc/Pods-oc.release.xcconfig"; sourceTree = "<group>"; };
 		FBEE612CF46B3B0D91AA4A02 /* libPods-oc.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-oc.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -76,13 +72,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B3712CDBA8DC6D32A00A8C44 /* libPods-NYOpenH5Demo.a in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		5DA8BC2D22EEE6D200268865 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -126,7 +115,6 @@
 			isa = PBXGroup;
 			children = (
 				5DA8BC0922EAA5CE00268865 /* NYOpenH5Demo */,
-				5DA8BC3122EEE6D200268865 /* MemoryCachUITests */,
 				5DA8BB8622E8500000268865 /* Products */,
 				9FEDB7121C6B90152CD99BD9 /* Pods */,
 				FDB4061BA985762C907B8BD4 /* Frameworks */,
@@ -137,7 +125,6 @@
 			isa = PBXGroup;
 			children = (
 				5DA8BC0822EAA5CE00268865 /* NYOpenH5Demo.app */,
-				5DA8BC3022EEE6D200268865 /* MemoryCachUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -156,15 +143,6 @@
 				5DA8BC1622EAA5CF00268865 /* Info.plist */,
 			);
 			path = NYOpenH5Demo;
-			sourceTree = "<group>";
-		};
-		5DA8BC3122EEE6D200268865 /* MemoryCachUITests */ = {
-			isa = PBXGroup;
-			children = (
-				5DA8BC3222EEE6D200268865 /* MemoryCachUITests.swift */,
-				5DA8BC3422EEE6D200268865 /* Info.plist */,
-			);
-			path = MemoryCachUITests;
 			sourceTree = "<group>";
 		};
 		9FEDB7121C6B90152CD99BD9 /* Pods */ = {
@@ -209,23 +187,6 @@
 			productReference = 5DA8BC0822EAA5CE00268865 /* NYOpenH5Demo.app */;
 			productType = "com.apple.product-type.application";
 		};
-		5DA8BC2F22EEE6D200268865 /* MemoryCachUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 5DA8BC3722EEE6D200268865 /* Build configuration list for PBXNativeTarget "MemoryCachUITests" */;
-			buildPhases = (
-				5DA8BC2C22EEE6D200268865 /* Sources */,
-				5DA8BC2D22EEE6D200268865 /* Frameworks */,
-				5DA8BC2E22EEE6D200268865 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = MemoryCachUITests;
-			productName = MemoryCachUITests;
-			productReference = 5DA8BC3022EEE6D200268865 /* MemoryCachUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -238,10 +199,6 @@
 				TargetAttributes = {
 					5DA8BC0722EAA5CE00268865 = {
 						CreatedOnToolsVersion = 10.2.1;
-					};
-					5DA8BC2F22EEE6D200268865 = {
-						CreatedOnToolsVersion = 10.2.1;
-						TestTargetID = 5DA8BBEA22EA9F1600268865;
 					};
 				};
 			};
@@ -259,7 +216,6 @@
 			projectRoot = "";
 			targets = (
 				5DA8BC0722EAA5CE00268865 /* NYOpenH5Demo */,
-				5DA8BC2F22EEE6D200268865 /* MemoryCachUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -272,13 +228,6 @@
 				5DA8BC1522EAA5CF00268865 /* LaunchScreen.storyboard in Resources */,
 				5DA8BC2122EAA66500268865 /* Main.storyboard in Resources */,
 				5DA8BC1222EAA5CF00268865 /* Assets.xcassets in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		5DA8BC2E22EEE6D200268865 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -326,14 +275,6 @@
 				5D2CB4D022FFBC0C00FFAE60 /* NYDiskFileCache.swift in Sources */,
 				5D2CB4CF22FFBC0C00FFAE60 /* NYH5ResourceCache.swift in Sources */,
 				5D2CB4D222FFBC0C00FFAE60 /* NYCacheProtocol.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		5DA8BC2C22EEE6D200268865 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				5DA8BC3322EEE6D200268865 /* MemoryCachUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -507,44 +448,6 @@
 			};
 			name = Release;
 		};
-		5DA8BC3822EEE6D200268865 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 9LL2CTCDPL;
-				INFOPLIST_FILE = MemoryCachUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = yuu.MemoryCachUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = oc;
-			};
-			name = Debug;
-		};
-		5DA8BC3922EEE6D200268865 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 9LL2CTCDPL;
-				INFOPLIST_FILE = MemoryCachUITests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = yuu.MemoryCachUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = oc;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -562,15 +465,6 @@
 			buildConfigurations = (
 				5DA8BC1822EAA5CF00268865 /* Debug */,
 				5DA8BC1922EAA5CF00268865 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		5DA8BC3722EEE6D200268865 /* Build configuration list for PBXNativeTarget "MemoryCachUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				5DA8BC3822EEE6D200268865 /* Debug */,
-				5DA8BC3922EEE6D200268865 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
