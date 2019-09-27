@@ -9,7 +9,6 @@
 import Foundation
 
 protocol NYCacheable {
-    
     associatedtype ObjectType
     
     /// 缓存总数量

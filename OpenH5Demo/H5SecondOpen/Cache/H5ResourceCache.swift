@@ -24,7 +24,7 @@ class NYH5ResourceCache: NSObject {
         memoryCache = NYMemoryCache.shared
         memoryCache.costLimit = kMemoryCacheCostLimit
             
-        diskCache = NYDiskFileCache(cacheDirectoryName: "NYH5ResourceCache")
+        diskCache = NYDiskFileCache(cacheDirectoryName: "H5ResourceCache")
         diskCache.costLimit = kDiskCacheCostLimit
         diskCache.ageLimit = kDiskCacheAgeLimit
         

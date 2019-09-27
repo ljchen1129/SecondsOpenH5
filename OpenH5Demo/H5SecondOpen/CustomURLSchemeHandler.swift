@@ -10,77 +10,32 @@ import Foundation
 import WebKit
 
 @available(iOS 11.0, *)
-class NYCustomURLSchemeHandler: NSObject, WKURLSchemeHandler {
-    /// 防止 urlSchemeTask 实例释放了，又给他发消息导致崩溃
-    var holdUrlSchemeTasks = [AnyHashable: Bool]()
-   
-    var queue = DispatchQueue(label: "holdUrlSchemeTasksQueue")
-    
-    /// 资源缓存
-    var resourceCache = NYH5ResourceCache()
-    
+class CustomURLSchemeHandler: NSObject {
+    // MARK: ---------------------------- lazy var ------------------------
     /// http 管理
-    var httpSessionManager: AFHTTPSessionManager {
+    lazy var httpSessionManager: AFHTTPSessionManager = {
         let manager = AFHTTPSessionManager()
         manager.requestSerializer = AFHTTPRequestSerializer()
         manager.responseSerializer = AFHTTPResponseSerializer()
         manager.responseSerializer.acceptableContentTypes = Set(arrayLiteral: "text/html", "application/json", "text/json", "text/javascript", "text/plain", "application/javascript", "text/css", "image/svg+xml", "application/font-woff2", "application/octet-stream")
         
         return manager
-    }
+    }()
     
-    // MARK:- 请求拦截开始
-    func webView(_ webView: WKWebView, start urlSchemeTask: WKURLSchemeTask) {
-        let headers = urlSchemeTask.request.allHTTPHeaderFields
-        guard let accept = headers?["Accept"] else { return }
-        guard let requestUrlString = urlSchemeTask.request.url?.absoluteString else { return }
-        
-        if accept.count >= "text".count && accept.contains("text/html") {
-            // html 拦截
-            print("html = \(String(describing: requestUrlString))")
-            loadLocalFile(fileName: creatCacheKey(urlSchemeTask: urlSchemeTask), urlSchemeTask: urlSchemeTask)
-        } else if (requestUrlString.isJSOrCSSFile()) {
-            // js || css 文件
-            print("js || css = \(String(describing: requestUrlString))")
-            loadLocalFile(fileName: creatCacheKey(urlSchemeTask: urlSchemeTask), urlSchemeTask: urlSchemeTask)
-            
-        } else if accept.count >= "image".count && accept.contains("image") {
-            // 图片
-            print("image = \(String(describing: requestUrlString))")
-            guard let originUrlString = urlSchemeTask.request.url?.absoluteString.replacingOccurrences(of: "customscheme", with: "https") else { return }
-            
-            SDWebImageManager.shared.loadImage(with: URL(string: originUrlString), options: SDWebImageOptions.retryFailed, progress: nil) { (image, data, error, type, _, _) in
-                if let image = image {
-                    guard let imageData = image.jpegData(compressionQuality: 1) else { return }
-                    self.resendRequset(urlSchemeTask: urlSchemeTask, mineType: "image/jpeg", requestData: imageData)
-                } else {
-                    self.loadLocalFile(fileName: self.creatCacheKey(urlSchemeTask: urlSchemeTask), urlSchemeTask: urlSchemeTask)
-                }
-            }
-            
-        } else {
-            // other resources
-            print("other resources = \(String(describing: requestUrlString))")
-            guard let cacheKey = self.creatCacheKey(urlSchemeTask: urlSchemeTask) else { return }
-            requestRomote(fileName: cacheKey, urlSchemeTask: urlSchemeTask)
-        }
-    }
+    // MARK: ---------------------------- var ------------------------
+    /// 防止 urlSchemeTask 实例释放了，又给他发消息导致崩溃
+    var holdUrlSchemeTasks = [AnyHashable: Bool]()
+    /// 资源缓存
+    var resourceCache = NYH5ResourceCache()
     
-    /// 自定义请求结束时调用
-    func webView(_ webView: WKWebView, stop urlSchemeTask: WKURLSchemeTask) {
-        httpSessionManager.invalidateSessionCancelingTasks(true)
-        queue.sync {
-            holdUrlSchemeTasks[urlSchemeTask.description] = false
-        }
-    }
-    
+    // MARK: ---------------------------- life Cycle ------------------------
     deinit {
         print("\(String(describing: self)) 销毁了")
     }
 }
 
 // MARK: - privateFunc
-extension NYCustomURLSchemeHandler {
+extension CustomURLSchemeHandler {
     /// 生成缓存key
     private func creatCacheKey(urlSchemeTask: WKURLSchemeTask) -> String? {
         guard let fileName = urlSchemeTask.request.url?.absoluteString.replacingOccurrences(of: "customscheme://", with: "") else { return nil }
@@ -97,7 +52,7 @@ extension NYCustomURLSchemeHandler {
 }
 
 // MARK: - resource load
-extension NYCustomURLSchemeHandler {
+extension CustomURLSchemeHandler {
     /// 加载本地资源
     private func loadLocalFile(fileName: String?, urlSchemeTask: WKURLSchemeTask) {
         if fileName == nil && fileName?.count == 0 { return }
@@ -142,6 +97,13 @@ extension NYCustomURLSchemeHandler {
             
         }) { (_, error) in
             print(error)
+            // urlSchemeTask 是否提前结束，结束了调用实例方法会崩溃
+            if let isValid = self.holdUrlSchemeTasks[urlSchemeTask.description] {
+                if !isValid {
+                    return
+                }
+            }
+            
             // 错误处理
             urlSchemeTask.didFailWithError(error)
         }
@@ -163,10 +125,56 @@ extension NYCustomURLSchemeHandler {
         
         let mineT = mineType ?? "text/html"
         let response = URLResponse(url: url, mimeType: mineT, expectedContentLength: requestData.count, textEncodingName: "utf-8")
-        DispatchQueue.main.async {
-            urlSchemeTask.didReceive(response)
-            urlSchemeTask.didReceive(requestData)
-            urlSchemeTask.didFinish()
+        urlSchemeTask.didReceive(response)
+        urlSchemeTask.didReceive(requestData)
+        urlSchemeTask.didFinish()
+    }
+}
+
+// MARK: - WKURLSchemeHandler
+extension CustomURLSchemeHandler: WKURLSchemeHandler {
+    // 自定义拦截请求开始
+    func webView(_ webView: WKWebView, start urlSchemeTask: WKURLSchemeTask) {
+        holdUrlSchemeTasks[urlSchemeTask.description] = true
+        
+        let headers = urlSchemeTask.request.allHTTPHeaderFields
+        guard let accept = headers?["Accept"] else { return }
+        guard let requestUrlString = urlSchemeTask.request.url?.absoluteString else { return }
+        
+        if accept.count >= "text".count && accept.contains("text/html") {
+            // html 拦截
+            print("html = \(String(describing: requestUrlString))")
+            loadLocalFile(fileName: creatCacheKey(urlSchemeTask: urlSchemeTask), urlSchemeTask: urlSchemeTask)
+        } else if (requestUrlString.isJSOrCSSFile()) {
+            // js || css 文件
+            print("js || css = \(String(describing: requestUrlString))")
+            loadLocalFile(fileName: creatCacheKey(urlSchemeTask: urlSchemeTask), urlSchemeTask: urlSchemeTask)
+            
+        } else if accept.count >= "image".count && accept.contains("image") {
+            // 图片
+            print("image = \(String(describing: requestUrlString))")
+            guard let originUrlString = urlSchemeTask.request.url?.absoluteString.replacingOccurrences(of: "customscheme", with: "https") else { return }
+            
+            SDWebImageManager.shared.loadImage(with: URL(string: originUrlString), options: SDWebImageOptions.retryFailed, progress: nil) { (image, data, error, type, _, _) in
+                if let image = image {
+                    guard let imageData = image.jpegData(compressionQuality: 1) else { return }
+                    self.resendRequset(urlSchemeTask: urlSchemeTask, mineType: "image/jpeg", requestData: imageData)
+                } else {
+                    self.loadLocalFile(fileName: self.creatCacheKey(urlSchemeTask: urlSchemeTask), urlSchemeTask: urlSchemeTask)
+                }
+            }
+            
+        } else {
+            // other resources
+            print("other resources = \(String(describing: requestUrlString))")
+            guard let cacheKey = self.creatCacheKey(urlSchemeTask: urlSchemeTask) else { return }
+            requestRomote(fileName: cacheKey, urlSchemeTask: urlSchemeTask)
         }
+    }
+    
+    /// 自定义请求结束时调用
+    func webView(_ webView: WKWebView, stop urlSchemeTask: WKURLSchemeTask) {
+        httpSessionManager.invalidateSessionCancelingTasks(true)
+        holdUrlSchemeTasks[urlSchemeTask.description] = false
     }
 }

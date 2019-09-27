@@ -13,44 +13,45 @@ class NYDiskFileCache: NSObject, NYCacheable {
     
     /// 缓存总大小
     var totalCost: UInt {
-        
-        if !self.isValidFileDir(fileCacheDir) {
-            
-            return 0
-        }
-        
-        var fileSize: UInt = 0
-        do {
-            let files = try FileManager.default.contentsOfDirectory(atPath: fileCacheDir!.path)
-            for file in files {
-                let fileUrl = fileCacheDir!.appendingPathComponent(file)
-                if let attributes = try? FileManager.default.attributesOfItem(atPath: fileUrl.path) {
-                    fileSize += (attributes[FileAttributeKey.size] as? UInt) ?? 0
-                }
+        get {
+            if !self.isValidFileDir(fileCacheDir) {
+                
+                return 0
             }
             
-            
-            return fileSize
-        }  catch {
-            
-            return 0
+            var fileSize: UInt = 0
+            do {
+                let files = try FileManager.default.contentsOfDirectory(atPath: fileCacheDir!.path)
+                for file in files {
+                    let fileUrl = fileCacheDir!.appendingPathComponent(file)
+                    if let attributes = try? FileManager.default.attributesOfItem(atPath: fileUrl.path) {
+                        fileSize += (attributes[FileAttributeKey.size] as? UInt) ?? 0
+                    }
+                }
+                
+                
+                return fileSize
+            }  catch {
+                
+                return 0
+            }
         }
     }
     
     /// 缓存总数量
     var totalCount: UInt {
-        
-        if !self.isValidFileDir(fileCacheDir) {
-            
-            return 0
-        }
-        do {
-            let files = try FileManager.default.contentsOfDirectory(atPath: fileCacheDir!.path)
-            
-            return UInt(files.count)
-        }  catch {
-            
-            return 0
+        get {
+            if !self.isValidFileDir(fileCacheDir) {
+                return 0
+            }
+            do {
+                let files = try FileManager.default.contentsOfDirectory(atPath: fileCacheDir!.path)
+                
+                return UInt(files.count)
+            }  catch {
+                
+                return 0
+            }
         }
     }
     
@@ -73,6 +74,7 @@ class NYDiskFileCache: NSObject, NYCacheable {
             }
             
             self.fileCacheDir = folder
+            print("文件磁盘路径path = \(String(describing: self.fileCacheDir))")
         }
 
         costLimit = UInt.max
@@ -88,15 +90,12 @@ class NYDiskFileCache: NSObject, NYCacheable {
         guard let dir = dir else { return false }
         if dir.path.count == 0 { return false }
         if !FileManager.default.fileExists(atPath: dir.path) { return false }
-        
+
         return true
     }
     
     private func creatFileUrl(_ fileName: String) -> URL? {
-        
         let fileUrl = fileCacheDir?.appendingPathComponent(fileName)
-        
-        
         return fileUrl
     }
 }
@@ -108,9 +107,7 @@ extension NYDiskFileCache {
             return false
         }
         
-        
         let contains = FileManager.default.fileExists(atPath: fileUrl.path)
-        
         return contains
     }
     
@@ -120,7 +117,6 @@ extension NYDiskFileCache {
             
             let dataString = try String(contentsOf: fileUrl, encoding: .utf8)
             let data = dataString.data(using: .utf8)
-//            let data = try Data(contentsOf: fileUrl, options: Data.ReadingOptions.dataReadingMapped)
             
             return data
         } catch let error {
@@ -132,11 +128,8 @@ extension NYDiskFileCache {
     func setObject(_ object: Data, forKey key: AnyHashable, withCost cost: UInt) {
         guard let fileUrl = creatFileUrl(key as! String) else { return }
         do {
-            
             let dataString = String(data: object, encoding: .utf8)
-            try dataString?.write(to: fileUrl, atomically: true, encoding: .utf8)
-//            try object.write(to: fileUrl, options: Data.WritingOptions.atomic)
-            
+            try dataString?.write(to: fileUrl, atomically: true, encoding: .utf8)   
         } catch let error {
             print("缓存写入 error = \(error)")
         }
@@ -159,33 +152,26 @@ extension NYDiskFileCache {
     }
     
     func removeObject(forKey key: AnyHashable) {
-        
         guard let dir = fileCacheDir else {  return }
         let fileName = key as! String
         let fileUrl = dir.path + "/\(fileName)"
         try? FileManager.default.removeItem(atPath: fileUrl)
-        
     }
     
     func removeAllObject() {
-        
         guard let dir = fileCacheDir else {  return }
         guard let fileArray = FileManager.default.subpaths(atPath: dir.path) else {  return }
         for fileName in fileArray{
             try? FileManager.default.removeItem(atPath: dir.path + "/\(fileName)")
         }
-        
-        
     }
 }
 
 // MARK: - trim 清理缓存逻辑
 extension NYDiskFileCache {
     func trim(withCost cost: UInt) {
-        
         if totalCount <= cost  {  return }
         if cost == 0 {
-            
             removeAllObject()
         }
         
@@ -195,19 +181,14 @@ extension NYDiskFileCache {
             let lastFileName = fileArray.last
             removeObject(forKey: lastFileName)
         }
-        
-        
     }
     
     func trim(withCount count: UInt) {
-        
         if totalCount <= count {
-            
             return
         }
         
         if count == 0 {
-            
             removeAllObject()
         }
         
@@ -217,14 +198,10 @@ extension NYDiskFileCache {
             let lastFileName = fileArray.last
             removeObject(forKey: lastFileName)
         }
-        
-        
     }
     
     func trim(withAge age: TimeInterval) {
-        
         if age == 0 {
-            
             removeAllObject()
         }
         
@@ -233,21 +210,15 @@ extension NYDiskFileCache {
         do {
             let files = try FileManager.default.contentsOfDirectory(atPath: dir.path)
             for file in files {
-                let fileUrl = fileCacheDir!.appendingPathComponent(file)
+                let fileUrl = dir.appendingPathComponent(file)
                 if let attributes = try? FileManager.default.attributesOfItem(atPath: fileUrl.path) {
                     guard let modifyDate = attributes[FileAttributeKey.modificationDate] as? Date else {  return }
-                    //                    let seconds = TimeZone.current.secondsFromGMT(for: modifyDate)
-                    //                    var convertDate = modifyDate
-                    //                    convertDate.addTimeInterval(TimeInterval(seconds))
-                    //                    print("convertDate + \(String(describing: convertDate))")
                     if Date().timeIntervalSince1970 - modifyDate.timeIntervalSince1970 > age {
                         // 过期的，删除掉
                         removeObject(forKey: file)
                     }
                 }
             }
-            
-            
         }  catch {
             
         }

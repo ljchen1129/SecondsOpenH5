@@ -9,8 +9,8 @@
 import Foundation
 import WebKit
 
-@objc public class NYReuseWebView: WKWebView {
-    var holdObject: AnyObject?
+@objc public class ReuseWebView: WKWebView {
+    weak var holdObject: AnyObject?
     
     static func clearAllWebCache() {
         let dataTypes = [WKWebsiteDataTypeMemoryCache, WKWebsiteDataTypeCookies, WKWebsiteDataTypeSessionStorage, WKWebsiteDataTypeOfflineWebApplicationCache, WKWebsiteDataTypeOfflineWebApplicationCache, WKWebsiteDataTypeCookies, WKWebsiteDataTypeLocalStorage, WKWebsiteDataTypeIndexedDBDatabases, WKWebsiteDataTypeWebSQLDatabases]
@@ -37,7 +37,7 @@ import WebKit
     }
 }
 
-extension NYReuseWebView: NYReuseWebViewProtocol {
+extension ReuseWebView: ReuseWebViewProtocol {
     func willReuse() {
         
     }

@@ -16,7 +16,7 @@ class WebViewVC: UIViewController {
     var lastTime: Double?
     
     lazy var webview: WKWebView = {
-        let wkwebView = NYWebViewReusePool.shared.getReusedWebView(ForHolder: self)!
+        let wkwebView = WebViewReusePool.shared.getReusedWebView(ForHolder: self)!
         wkwebView.navigationDelegate = self
         wkwebView.addObserver(self, forKeyPath: #keyPath(WKWebView.estimatedProgress), options: .new, context: nil)
 
@@ -88,7 +88,7 @@ class WebViewVC: UIViewController {
     
     deinit {
        webview.removeObserver(self, forKeyPath: #keyPath(WKWebView.estimatedProgress))
-        NYWebViewReusePool.shared.recycleReusedWebView(webview as? NYReuseWebView)
+        WebViewReusePool.shared.recycleReusedWebView(webview as? ReuseWebView)
         print("webVC 销毁了!!!")
     }
     
@@ -143,27 +143,3 @@ extension WebViewVC: WKNavigationDelegate {
         webView.reload()
     }
 }
-
-//extension WebViewVC {
-//    override func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
-//        if event?.subtype == UIEvent.EventSubtype.motionShake {
-//
-//            let alertVC = UIAlertController.init(title: "查看界面结构", message: "", preferredStyle: UIAlertController.Style.alert)
-//            alertVC.addAction(UIAlertAction(title: "导出UI结构", style: .default, handler: { (_) in
-//                NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "Lookin_Export"), object: nil)
-//            }))
-//            alertVC.addAction(UIAlertAction(title: "2D视图", style: .default, handler: { (_) in
-//                NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "Lookin_2D"), object: nil)
-//            }))
-//            alertVC.addAction(UIAlertAction(title: "3D视图", style: .default, handler: { (_) in
-//                NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "Lookin_3D"), object: nil)
-//            }))
-//            alertVC.addAction(UIAlertAction(title: "取消", style: .cancel, handler: { (_) in
-//
-//            }))
-//
-//            self.present(alertVC, animated: true, completion: nil)
-//        }
-//    }
-//}
-

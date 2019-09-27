@@ -6,15 +6,15 @@
 //  Copyright © 2019 陈良静. All rights reserved.
 //
 
-#import "NYOCLoader.h"
+#import "OCLoader.h"
 /// Swift
-#import <NYOpenH5Demo-Swift.h>
+#import <OpenH5Demo-Swift.h>
 
-@implementation NYOCLoader
+@implementation OCLoader
 
 + (void)load
 {
-    [NYWebViewReusePool swiftyLoad];
+    [WebViewReusePool swiftyLoad];
 }
 
 @end

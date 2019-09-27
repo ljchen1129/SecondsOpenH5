@@ -9,13 +9,13 @@
 import Foundation
 import WebKit
 
-protocol NYReuseWebViewProtocol {
+protocol ReuseWebViewProtocol {
     func willReuse()
     func endReuse()
 }
 
-@objc public class NYWebViewReusePool: NSObject {
-    @objc public static let shared = NYWebViewReusePool()
+@objc public class WebViewReusePool: NSObject {
+    @objc public static let shared = WebViewReusePool()
     @objc public var defaultConfigeration: WKWebViewConfiguration {
         get {
             let config = WKWebViewConfiguration.init()
@@ -23,15 +23,20 @@ protocol NYReuseWebViewProtocol {
             preferences.javaScriptCanOpenWindowsAutomatically = true
             config.preferences = preferences
             if #available(iOS 11.0, *) {
-                config.setURLSchemeHandler(NYCustomURLSchemeHandler(), forURLScheme: "customScheme")
+                // 校验自定义 customScheme 是否已经可用，没有注册过才能使用
+                guard let _ =  config.urlSchemeHandler(forURLScheme: "customScheme") else {
+                               config.setURLSchemeHandler(CustomURLSchemeHandler(), forURLScheme: "customScheme")
+                    return config
+                }
+     
             }
             
             return config
         }
     }
     
-    var visiableWebViewSet = Set<NYReuseWebView>()
-    var reusableWebViewSet = Set<NYReuseWebView>()
+    var visiableWebViewSet = Set<ReuseWebView>()
+    var reusableWebViewSet = Set<ReuseWebView>()
     
     /// 线程锁
     var lock = DispatchSemaphore(value: 1)
@@ -54,7 +59,7 @@ protocol NYReuseWebViewProtocol {
     
     @objc static func didFinishLaunchingNotification() {
         // 预先初始化webview
-        NYWebViewReusePool.shared.prepareWebView()
+        WebViewReusePool.shared.prepareWebView()
     }
     
     @objc func didReceiveMemoryWarningNotification() {
@@ -63,14 +68,14 @@ protocol NYReuseWebViewProtocol {
     
     func prepareWebView() {
         DispatchQueue.main.async {
-            let webView = NYReuseWebView(frame: CGRect.zero, configuration: self.defaultConfigeration)
+            let webView = ReuseWebView(frame: CGRect.zero, configuration: self.defaultConfigeration)
             self.reusableWebViewSet.insert(webView)
         }
     }
     
     func tryCompactWeakHolders() {
         lock.wait()
-        var shouldreusedWebViewSet = Set<NYReuseWebView>()
+        var shouldreusedWebViewSet = Set<ReuseWebView>()
         for webView in visiableWebViewSet {
             guard let _ = webView.holdObject else {
                 shouldreusedWebViewSet.insert(webView)
@@ -89,12 +94,12 @@ protocol NYReuseWebViewProtocol {
 }
 
 // MARK: - 复用池操作
-extension NYWebViewReusePool {
-    @objc public func getReusedWebView(ForHolder holder: AnyObject?) -> NYReuseWebView? {
+extension WebViewReusePool {
+    @objc public func getReusedWebView(ForHolder holder: AnyObject?) -> ReuseWebView? {
         guard let holder = holder else { return nil }
         
         tryCompactWeakHolders()
-        let webView: NYReuseWebView
+        let webView: ReuseWebView
         lock.wait()
         if reusableWebViewSet.count > 0 {
             webView = reusableWebViewSet.randomElement()!
@@ -102,7 +107,7 @@ extension NYWebViewReusePool {
             visiableWebViewSet.insert(webView)
             webView.willReuse()
         } else {
-            webView = NYReuseWebView(frame: CGRect.zero, configuration: defaultConfigeration)
+            webView = ReuseWebView(frame: CGRect.zero, configuration: defaultConfigeration)
             visiableWebViewSet.insert(webView)
         }
         
@@ -112,7 +117,7 @@ extension NYWebViewReusePool {
         return webView
     }
     
-    @objc func recycleReusedWebView(_ webView: NYReuseWebView?) {
+    @objc func recycleReusedWebView(_ webView: ReuseWebView?) {
         guard let webView = webView else { return }
         
         lock.wait()
@@ -129,6 +134,6 @@ extension NYWebViewReusePool {
         lock.wait()
         reusableWebViewSet.removeAll()
         lock.signal()
-        NYReuseWebView.clearAllWebCache()
+        ReuseWebView.clearAllWebCache()
     }
 }

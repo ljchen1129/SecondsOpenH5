@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "5DA8BC0722EAA5CE00268865"
-               BuildableName = "NYOpenH5Demo.app"
-               BlueprintName = "NYOpenH5Demo"
-               ReferencedContainer = "container:NYOpenH5Demo.xcodeproj">
+               BuildableName = "OpenH5Demo.app"
+               BlueprintName = "OpenH5Demo"
+               ReferencedContainer = "container:OpenH5Demo.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -27,19 +27,17 @@
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
-      <Testables>
-      </Testables>
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "5DA8BC0722EAA5CE00268865"
-            BuildableName = "NYOpenH5Demo.app"
-            BlueprintName = "NYOpenH5Demo"
-            ReferencedContainer = "container:NYOpenH5Demo.xcodeproj">
+            BuildableName = "OpenH5Demo.app"
+            BlueprintName = "OpenH5Demo"
+            ReferencedContainer = "container:OpenH5Demo.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
-      <AdditionalOptions>
-      </AdditionalOptions>
+      <Testables>
+      </Testables>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
@@ -56,13 +54,11 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "5DA8BC0722EAA5CE00268865"
-            BuildableName = "NYOpenH5Demo.app"
-            BlueprintName = "NYOpenH5Demo"
-            ReferencedContainer = "container:NYOpenH5Demo.xcodeproj">
+            BuildableName = "OpenH5Demo.app"
+            BlueprintName = "OpenH5Demo"
+            ReferencedContainer = "container:OpenH5Demo.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
-      <AdditionalOptions>
-      </AdditionalOptions>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -75,9 +71,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "5DA8BC0722EAA5CE00268865"
-            BuildableName = "NYOpenH5Demo.app"
-            BlueprintName = "NYOpenH5Demo"
-            ReferencedContainer = "container:NYOpenH5Demo.xcodeproj">
+            BuildableName = "OpenH5Demo.app"
+            BlueprintName = "OpenH5Demo"
+            ReferencedContainer = "container:OpenH5Demo.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
