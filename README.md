@@ -2,13 +2,15 @@
 
 最近公司项目中需要做秒开 h5 页面的优化需求，于是调研了下市面上的方案，并结合本公司具体的业务需求做了一次这方面的优化实践，这篇文章是对这次优化实践的记录，文末附上源代码下载。
 
+### 先看效果
+
+![ezgif.com-optimize](http://liangjinggege.com/2019-09-27-074217.gif)
+
 ### 优化思路
 
 首先来看，在 iOS 平台加载一个 H5 网页，需要经过哪些步骤：
 
 初始化 webview -> 请求页面 -> 下载数据 -> 解析HTML -> 请求 js/css 资源 -> dom 渲染 -> 解析 JS 执行 -> JS 请求数据 -> 解析渲染 -> 下载渲染图片
-
-<!--more-->
 
 ![WebViewå¯å¨æ¶é´](http://liangjinggege.com/2019-09-27-44204.png)
 
@@ -116,7 +118,7 @@ func webView(_ webView: WKWebView, stop urlSchemeTask: WKURLSchemeTask) {
 使用协议的方式定义了接口 API：
 
 ```swift
-protocol NYCacheable {
+protocol Cacheable {
     associatedtype ObjectType
     
     /// 缓存总数量
@@ -175,7 +177,7 @@ protocol NYCacheable {
     func trim(withAge age: TimeInterval)
 }
 
-extension NYCacheable {
+extension Cacheable {
     func setObject(_ object: ObjectType, forKey key: AnyHashable) {
         setObject(object, forKey: key, withCost: 0)
     }
@@ -187,21 +189,21 @@ extension NYCacheable {
 ```swift
 /// h5 页面资源缓存
 class H5ResourceCache: NSObject {
-    /// 内存缓存大小：50M
-    private let kMemoryCacheCostLimit: UInt = 50 * 1024 * 1024
-    /// 磁盘文件缓存大小： 200M
-    private let kDiskCacheCostLimit: UInt = 200 * 1024 * 1024
+    /// 内存缓存大小：10M
+    private let kMemoryCacheCostLimit: UInt = 10 * 1024 * 1024
+    /// 磁盘文件缓存大小： 10M
+    private let kDiskCacheCostLimit: UInt = 10 * 1024 * 1024
     /// 磁盘文件缓存时长：30 分钟
     private let kDiskCacheAgeLimit: TimeInterval = 30 * 60
     
-    private var memoryCache: NYMemoryCache
-    private var diskCache: NYDiskFileCache
+    private var memoryCache: MemoryCache
+    private var diskCache: DiskFileCache
     
     override init() {
-        memoryCache = NYMemoryCache.shared
+        memoryCache = MemoryCache.shared
         memoryCache.costLimit = kMemoryCacheCostLimit
             
-        diskCache = NYDiskFileCache(cacheDirectoryName: "H5ResourceCache")
+        diskCache = DiskFileCache(cacheDirectoryName: "H5ResourceCache")
         diskCache.costLimit = kDiskCacheCostLimit
         diskCache.ageLimit = kDiskCacheAgeLimit
         

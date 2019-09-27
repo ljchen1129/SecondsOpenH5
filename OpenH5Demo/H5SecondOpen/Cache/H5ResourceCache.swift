@@ -10,21 +10,21 @@ import Foundation
 
 /// h5 页面资源缓存
 class H5ResourceCache: NSObject {
-    /// 内存缓存大小：50M
-    private let kMemoryCacheCostLimit: UInt = 50 * 1024 * 1024
-    /// 磁盘文件缓存大小： 200M
-    private let kDiskCacheCostLimit: UInt = 200 * 1024 * 1024
+    /// 内存缓存大小：10M
+    private let kMemoryCacheCostLimit: UInt = 10 * 1024 * 1024
+    /// 磁盘文件缓存大小： 10M
+    private let kDiskCacheCostLimit: UInt = 10 * 1024 * 1024
     /// 磁盘文件缓存时长：30 分钟
     private let kDiskCacheAgeLimit: TimeInterval = 30 * 60
     
-    private var memoryCache: NYMemoryCache
-    private var diskCache: NYDiskFileCache
+    private var memoryCache: MemoryCache
+    private var diskCache: DiskFileCache
     
     override init() {
-        memoryCache = NYMemoryCache.shared
+        memoryCache = MemoryCache.shared
         memoryCache.costLimit = kMemoryCacheCostLimit
             
-        diskCache = NYDiskFileCache(cacheDirectoryName: "H5ResourceCache")
+        diskCache = DiskFileCache(cacheDirectoryName: "H5ResourceCache")
         diskCache.costLimit = kDiskCacheCostLimit
         diskCache.ageLimit = kDiskCacheAgeLimit
         
@@ -63,5 +63,3 @@ class H5ResourceCache: NSObject {
         diskCache.removeAllObject()
     }
 }
-
-

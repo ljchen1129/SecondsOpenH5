@@ -9,7 +9,7 @@
 import Foundation
 
 /// 磁盘文件缓存
-class NYDiskFileCache: NSObject, NYCacheable {
+class DiskFileCache: NSObject, Cacheable {
     
     /// 缓存总大小
     var totalCost: UInt {
@@ -80,7 +80,7 @@ class NYDiskFileCache: NSObject, NYCacheable {
         costLimit = UInt.max
         countLimit = UInt.max
         ageLimit = Double.greatestFiniteMagnitude
-        queue = DispatchQueue(label: String(describing: type(of: NYDiskFileCache.self)))
+        queue = DispatchQueue(label: String(describing: type(of: DiskFileCache.self)))
         
         super.init()
     }
@@ -101,7 +101,7 @@ class NYDiskFileCache: NSObject, NYCacheable {
 }
 
 // MARK: - 缓存操作
-extension NYDiskFileCache {
+extension DiskFileCache {
     func contain(forKey key: AnyHashable) -> Bool {
         guard let fileUrl = creatFileUrl(key as! String) else {
             return false
@@ -168,9 +168,9 @@ extension NYDiskFileCache {
 }
 
 // MARK: - trim 清理缓存逻辑
-extension NYDiskFileCache {
+extension DiskFileCache {
     func trim(withCost cost: UInt) {
-        if totalCount <= cost  {  return }
+        if totalCost <= cost  {  return }
         if cost == 0 {
             removeAllObject()
         }

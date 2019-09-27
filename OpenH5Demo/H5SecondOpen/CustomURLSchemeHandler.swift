@@ -17,7 +17,7 @@ class CustomURLSchemeHandler: NSObject {
         let manager = AFHTTPSessionManager()
         manager.requestSerializer = AFHTTPRequestSerializer()
         manager.responseSerializer = AFHTTPResponseSerializer()
-        manager.responseSerializer.acceptableContentTypes = Set(arrayLiteral: "text/html", "application/json", "text/json", "text/javascript", "text/plain", "application/javascript", "text/css", "image/svg+xml", "application/font-woff2", "application/octet-stream")
+        manager.responseSerializer.acceptableContentTypes = Set(arrayLiteral: "text/html", "application/json", "text/json", "text/javascript", "text/plain", "application/javascript", "text/css", "image/svg+xml", "application/font-woff2", "font/woff2", "application/octet-stream")
         
         return manager
     }()
@@ -174,7 +174,6 @@ extension CustomURLSchemeHandler: WKURLSchemeHandler {
     
     /// 自定义请求结束时调用
     func webView(_ webView: WKWebView, stop urlSchemeTask: WKURLSchemeTask) {
-        httpSessionManager.invalidateSessionCancelingTasks(true)
         holdUrlSchemeTasks[urlSchemeTask.description] = false
     }
 }

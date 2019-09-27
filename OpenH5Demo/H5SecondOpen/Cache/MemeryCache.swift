@@ -1,6 +1,6 @@
 //
-//  NYMemeryCache.swift
-//  NYOpenH5Demo
+//  MemeryCache.swift
+//  OpenH5Demo
 //
 //  Created by 陈良静 on 2019/7/29.
 //  Copyright © 2019 陈良静. All rights reserved.
@@ -22,11 +22,11 @@ import Foundation
      2. 将节点移动到链表头部
  */
 /// 链表节点
-class NYLinkedNode: NSObject {
+class LinkedNode: NSObject {
     /// 链表前驱节点
-    var prev: NYLinkedNode?
+    var prev: LinkedNode?
     /// 链表后继节点
-    var next: NYLinkedNode?
+    var next: LinkedNode?
     
     var key: AnyHashable!
     var value: Any!
@@ -35,9 +35,9 @@ class NYLinkedNode: NSObject {
 }
 
 /// 链表对象
-class NYLinkedNodeMap: NSObject {
+class LinkedNodeMap: NSObject {
     /// 实现链表的存储结构
-    var dict = [AnyHashable: NYLinkedNode]()
+    var dict = [AnyHashable: LinkedNode]()
     
     /// 链表节点总占得空间大小
     var totalCost: UInt = 0
@@ -45,15 +45,15 @@ class NYLinkedNodeMap: NSObject {
     var totalCount: UInt = 0
     
     /// 头结点
-    var head: NYLinkedNode?
+    var head: LinkedNode?
     
     /// 为节点
-    var tail: NYLinkedNode?
+    var tail: LinkedNode?
     
     /// 在头节点位置插入节点
     ///
     /// - Parameter node:
-    func insertNodeAtHead(_ node: NYLinkedNode) {
+    func insertNodeAtHead(_ node: LinkedNode) {
         dict[node.key] = node
         totalCost += node.cost
         totalCount += 1
@@ -70,7 +70,7 @@ class NYLinkedNodeMap: NSObject {
     /// 将节点移动到头节点位置
     ///
     /// - Parameter node:
-    func bringNodeToHead(_ node: NYLinkedNode) {
+    func bringNodeToHead(_ node: LinkedNode) {
         if head == node { return }
         
         if (tail == node) {
@@ -90,7 +90,7 @@ class NYLinkedNodeMap: NSObject {
     /// 删除指定节点
     ///
     /// - Parameter node:
-    func removeNode(_ node: NYLinkedNode) {
+    func removeNode(_ node: LinkedNode) {
         dict.removeValue(forKey: node.key)
        
         totalCost -= node.cost
@@ -131,9 +131,9 @@ class NYLinkedNodeMap: NSObject {
 }
 
 /// 内存缓存
-class NYMemoryCache: NSObject, NYCacheable {
+class MemoryCache: NSObject, Cacheable {
     ///////////////////////////////////  public  //////////////////////////////////////////
-    public static let shared = NYMemoryCache()
+    public static let shared = MemoryCache()
     
     /// 缓存总数量
     public var totalCount: UInt {
@@ -164,7 +164,7 @@ class NYMemoryCache: NSObject, NYCacheable {
     
     ///////////////////////////////////  private  //////////////////////////////////////////
     /// 双链表对象
-    private var linedMap: NYLinkedNodeMap
+    private var linedMap: LinkedNodeMap
     /// 串行队列
     private var queue: DispatchQueue
     private var lock: pthread_mutex_t
@@ -172,8 +172,8 @@ class NYMemoryCache: NSObject, NYCacheable {
     // MARK: - lifeCycle
     override init() {
         lock = pthread_mutex_t.init()
-        linedMap = NYLinkedNodeMap.init()
-        queue = DispatchQueue(label: String(describing: type(of: NYMemoryCache.self)))
+        linedMap = LinkedNodeMap.init()
+        queue = DispatchQueue(label: String(describing: type(of: MemoryCache.self)))
         costLimit = UInt.max
         countLimit = UInt.max
         ageLimit = Double.greatestFiniteMagnitude
@@ -224,7 +224,7 @@ class NYMemoryCache: NSObject, NYCacheable {
 }
 
 // MARK: - Acccess 公共访问接口
-extension NYMemoryCache {
+extension MemoryCache {
 
     public func contain(forKey key: AnyHashable) -> Bool {
         pthread_mutex_lock(&lock)
@@ -253,7 +253,7 @@ extension NYMemoryCache {
         let now = CACurrentMediaTime()
         guard let node = linedMap.dict[key] else {
             // 节点不存在，新建一个。插入到链表的头部
-            let node = NYLinkedNode.init()
+            let node = LinkedNode.init()
             node.cost = cost
             node.time = now
             node.key = key
@@ -303,7 +303,7 @@ extension NYMemoryCache {
 }
 
 // MARK: - trim 将缓存大小移除到规定大小
-extension NYMemoryCache {
+extension MemoryCache {
     public func trim(withCost cost: UInt) {
         var finish = false
         pthread_mutex_lock(&lock)

@@ -63,7 +63,7 @@ class WebViewVC: UIViewController {
         view.bringSubviewToFront(progressLine)
         
         view.addSubview(loadTimeLabel)
-        loadTimeLabel.frame = CGRect(x: 100, y: 100, width: 100, height: 50)
+        loadTimeLabel.frame = CGRect(x: UIScreen.main.bounds.size.width - 100, y: 100, width: 100, height: 50)
         view.bringSubviewToFront(loadTimeLabel)
         
         guard let url = URL(string: urlString) else { return }
@@ -78,12 +78,9 @@ class WebViewVC: UIViewController {
         self.loadTimeLabel.text = String(format: "%.3f", lastTime!)
         timer!.setEventHandler {
             let time = CFAbsoluteTimeGetCurrent() - self.lastTime!
-            self.loadTimeLabel.text = String(format: "%.3f", time)
+            self.loadTimeLabel.text = String(format: "%.3f秒", time)
         }
         timer?.activate()
-        
-        UIApplication.shared.applicationSupportsShakeToEdit = true
-        self.becomeFirstResponder()
     }
     
     deinit {

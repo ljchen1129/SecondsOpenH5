@@ -12,12 +12,35 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
     
-    let datasoures = ["https://juejin.im/post/5d8da122f265da5b5a7209fa", "https://www.jianshu.com/", "https://www.sina.com.cn/", "https://github.com/", "https://stackoverflow.com/", "https://baidu.com", "https://sohu.com", "https://zhihu.com", "https://chenliangjing.me/2019/09/27/iOS-%E7%AB%AF-h5-%E9%A1%B5%E9%9D%A2%E7%A7%92%E5%BC%80%E4%BC%98%E5%8C%96%E5%AE%9E%E8%B7%B5/"]
+    let datasoures = ["https://juejin.im/post/5d8da122f265da5b5a7209fa", "https://github.com/ljchen1129/SecondsOpenH5", "https://chenliangjing.me/2019/09/27/iOS-%E7%AB%AF-h5-%E9%A1%B5%E9%9D%A2%E7%A7%92%E5%BC%80%E4%BC%98%E5%8C%96%E5%AE%9E%E8%B7%B5/", "https://www.zhihu.com", "https://www.douban.com/", "https://www.taobao.com", "https://www.jd.com/", "https://www.apple.com/"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         tableView.tableFooterView = UIView()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        // 添加磁盘容量大小
+        var total: UInt = 0
+        guard let cacheDir = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).last else { return  }
+        let fileCacheDir = cacheDir.appendingPathComponent("H5ResourceCache")
+        do {
+            let files = try FileManager.default.contentsOfDirectory(atPath: fileCacheDir.path)
+            for file in files {
+                let fileUrl = fileCacheDir.appendingPathComponent(file)
+                if let attributes = try? FileManager.default.attributesOfItem(atPath: fileUrl.path) {
+                    total += (attributes[FileAttributeKey.size] as? UInt) ?? 0
+                }
+            }
+        } catch {
+            
+        }
+        
+        let cacheSize = String(format: "%.2f", Double(total)/1024/1024)
+        navigationItem.title = "磁盘总缓存大小：\(cacheSize)MB"
     }
 }
 

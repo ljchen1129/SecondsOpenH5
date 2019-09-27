@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol NYCacheable {
+protocol Cacheable {
     associatedtype ObjectType
     
     /// 缓存总数量
@@ -67,7 +67,7 @@ protocol NYCacheable {
     func trim(withAge age: TimeInterval)
 }
 
-extension NYCacheable {
+extension Cacheable {
     func setObject(_ object: ObjectType, forKey key: AnyHashable) {
         setObject(object, forKey: key, withCost: 0)
     }
