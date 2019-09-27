@@ -9,7 +9,7 @@
 import Foundation
 
 /// h5 页面资源缓存
-class NYH5ResourceCache: NSObject {
+class H5ResourceCache: NSObject {
     /// 内存缓存大小：50M
     private let kMemoryCacheCostLimit: UInt = 50 * 1024 * 1024
     /// 磁盘文件缓存大小： 200M

@@ -26,7 +26,7 @@ class CustomURLSchemeHandler: NSObject {
     /// 防止 urlSchemeTask 实例释放了，又给他发消息导致崩溃
     var holdUrlSchemeTasks = [AnyHashable: Bool]()
     /// 资源缓存
-    var resourceCache = NYH5ResourceCache()
+    var resourceCache = H5ResourceCache()
     
     // MARK: ---------------------------- life Cycle ------------------------
     deinit {
