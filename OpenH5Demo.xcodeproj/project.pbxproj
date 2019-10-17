@@ -422,7 +422,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = yuu.OpenH5Demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "/Users/chenliangjing/SecondsOpenH5/OpenH5Demo/OpenH5Demo-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/OpenH5Demo/OpenH5Demo-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -442,7 +442,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = yuu.OpenH5Demo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "/Users/chenliangjing/SecondsOpenH5/OpenH5Demo/OpenH5Demo-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "$(PROJECT_DIR)/OpenH5Demo/OpenH5Demo-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
